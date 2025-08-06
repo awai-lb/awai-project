@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [ develop ]  # ← ★main を develop に変更！
 
 jobs:
   deploy:
@@ -26,6 +26,6 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
-          branch: gh-pages    # デプロイ先ブランチ
-          folder: public      # ビルド成果物のフォルダ（例: dist や public）
+          branch: gh-pages    # デプロイ先のブランチ
+          folder: public      # ビルド成果物の出力先（dist や build の場合はここを変更）
 
