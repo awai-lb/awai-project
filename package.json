@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "description": "AWAI Project - ともに在る間（あわい）を育む共生社会プラットフォーム",
   "main": "index.js",
-  "scripts": {
-    "start": "http-server -p 3000 public",
-    "start:dev": "http-server -p 3000 public -c-1",
-    "test": "jest",
-    "lint": "eslint src/**/*.js",
-    "format": "prettier --write \"src/**/*.{js,html,css}\"",
-    "build": "node scripts/build.js"
-  },
+"scripts": {
+  "start": "http-server -p 3000 public",
+  "start:dev": "http-server -p 3000 public -c-1",
+  "test": "jest",
+  "lint": "eslint src/**/*.js",
+  "format": "prettier --write \"src/**/*.{js,html,css}\"",
+  "build": "echo 'Build step skipped: Static site only'"
+},
   "author": "",
   "license": "MIT",
   "repository": {
