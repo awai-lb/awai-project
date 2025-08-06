@@ -11,22 +11,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14'
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
 
-    - name: Install dependencies
-      run: npm ci
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./awai-project
 
-    - name: Lint
-      run: npm run lint
+      - name: Lint
+        run: npm run lint
+        working-directory: ./awai-project
 
-    - name: Test
-      run: npm test
+      - name: Test
+        run: npm test
+        working-directory: ./awai-project
 
-    - name: Build
-      run: npm run build
+      - name: Build
+        run: npm run build
+        working-directory: ./awai-project
 
