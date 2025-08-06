@@ -1,0 +1,1336 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shared Lives Strengths クイックアセスメント</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      :root {
+        --kusunoki-dark-green: #2d5016;
+        --kusunoki-green: #4a7c3c;
+        --kusunoki-brown: #8b4513;
+        --kusunoki-beige: #f5f2e8;
+        --kusunoki-gray: #a0a0a0;
+      }
+      body {
+        font-family: 'Noto Sans JP', sans-serif;
+        background-color: var(--kusunoki-beige);
+        color: #333;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .logo {
+        font-size: 2rem;
+        color: var(--kusunoki-dark-green);
+        font-weight: bold;
+      }
+      .subtitle {
+        color: var(--kusunoki-green);
+        font-weight: 300;
+      }
+      .card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 25px;
+        margin-bottom: 20px;
+      }
+      .question-card {
+        display: none;
+      }
+      .question-card.active {
+        display: block;
+        animation: fadeIn 0.5s;
+      }
+      .progress-bar {
+        height: 8px;
+        background-color: #e0e0e0;
+        border-radius: 4px;
+        margin: 20px 0;
+      }
+      .progress {
+        height: 100%;
+        background-color: var(--kusunoki-green);
+        border-radius: 4px;
+        transition: width 0.3s ease;
+      }
+      .btn {
+        padding: 10px 20px;
+        border-radius: 4px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      .btn-primary {
+        background-color: var(--kusunoki-green);
+        color: white;
+      }
+      .btn-primary:hover {
+        background-color: var(--kusunoki-dark-green);
+      }
+      .btn-secondary {
+        background-color: var(--kusunoki-beige);
+        color: var(--kusunoki-dark-green);
+        border: 1px solid var(--kusunoki-dark-green);
+      }
+      .btn-secondary:hover {
+        background-color: #e8e5dd;
+      }
+      .slider {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 8px;
+        border-radius: 4px;
+        background: #d3d3d3;
+        outline: none;
+        margin: 20px 0;
+      }
+      .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--kusunoki-green);
+        cursor: pointer;
+      }
+      .slider::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--kusunoki-green);
+        cursor: pointer;
+      }
+      .slider-labels {
+        display: flex;
+        justify-content: space-between;
+        margin-top: -10px;
+        color: var(--kusunoki-gray);
+        font-size: 0.8rem;
+      }
+      .result-card {
+        display: none;
+      }
+      .chart-container {
+        position: relative;
+        height: 400px;
+        width: 100%;
+      }
+      .result-section {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+      }
+      .category-title {
+        color: var(--kusunoki-dark-green);
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+      .risk-high {
+        color: #e53e3e;
+      }
+      .risk-medium {
+        color: #dd6b20;
+      }
+      .risk-low {
+        color: var(--kusunoki-green);
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      .leaf-icon {
+        color: var(--kusunoki-green);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1 class="logo">Shared Lives Strengths</h1>
+        <p class="subtitle">クイックアセスメント（15問版）</p>
+      </div>
+
+      <div class="card intro-card" id="intro-card">
+        <h2 class="text-xl font-bold mb-4 text-center" style="color: var(--kusunoki-dark-green)">
+          ようこそ
+        </h2>
+        <p class="mb-4">
+          このアセスメントは、あなたの「共生活力」を見える化し、今後の持続可能性を考えるためのツールです。
+        </p>
+        <p class="mb-4">
+          「自分らしく、誰かと共に生きる」ための力を、現在と将来の視点から探ります。
+        </p>
+        <p class="mb-6">回答には約3〜5分かかります。あなたの率直な気持ちで回答してください。</p>
+        <div class="flex justify-center">
+          <button class="btn btn-primary" onclick="startAssessment()">
+            始める <i class="fas fa-arrow-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="progress-container" style="display: none">
+        <div class="progress-bar">
+          <div class="progress" id="progress-bar"></div>
+        </div>
+        <div class="text-right text-sm" style="color: var(--kusunoki-gray)">
+          <span id="current-question">1</span>/15
+        </div>
+      </div>
+
+      <!-- Question 1: 家族・支援者（現状評価） -->
+      <div class="card question-card" id="q1">
+        <div class="mb-4">
+          <i class="fas fa-seedling leaf-icon mr-2"></i>
+          <span class="text-sm" style="color: var(--kusunoki-gray)">家族・支援者</span>
+        </div>
+        <h3 class="text-lg font-medium mb-4">あなたの日常生活を支えてくれる人は周りにいますか？</h3>
+        <input type="range" min="1" max="5" value="3" class="slider" id="q1-slider" />
+        <div class="slider-labels">
+          <span>ほとんどいない</span>
+          <span>少しいる</span>
+          <span>十分いる</span>
+        </div>
+        <div class="mt-6">
+          <label class="block text-sm mb-2">補足情報（任意）:</label>
+          <textarea
+            id="q1-notes"
+            class="w-full p-2 border rounded"
+            rows="2"
+            placeholder="支えてくれる人について、もう少し教えてください"
+          ></textarea>
+        </div>
+        <div class="flex justify-between mt-6">
+          <div></div>
+          <button class="btn btn-primary" onclick="nextQuestion(1)">
+            次へ <i class="fas fa-arrow-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Question 2: 家族・支援者（持続可能性評価） -->
+      <div class="card question-card" id="q2">
+        <div class="mb-4">
+          <i class="fas fa-seedling leaf-icon mr-2"></i>
+          <span class="text-sm" style="color: var(--kusunoki-gray)">家族・支援者</span>
+        </div>
+        <h3 class="text-lg font-medium mb-4">
+          5年後も、現在の支援者があなたを同じように支えられると思いますか？
+        </h3>
+        <input type="range" min="1" max="5" value="3" class="slider" id="q2-slider" />
+        <div class="slider-labels">
+          <span>とても不安</span>
+          <span>少し不安</span>
+          <span>安心している</span>
+        </div>
+        <div class="mt-6">
+          <label class="block text-sm mb-2">補足情報（任意）:</label>
+          <textarea
+            id="q2-notes"
+            class="w-full p-2 border rounded"
+            rows="2"
+            placeholder="不安なことや心配なことがあれば教えてください"
+          ></textarea>
+        </div>
+        <div class="flex justify-between mt-6">
+          <button class="btn btn-secondary" onclick="prevQuestion(2)">
+            <i class="fas fa-arrow-left mr-2"></i> 戻る
+          </button>
+          <button class="btn btn-primary" onclick="nextQuestion(2)">
+            次へ <i class="fas fa-arrow-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Question 3: 経済・就労（現状評価） -->
+      <div class="card question-card" id="q3">
+        <div class="mb-4">
+          <i class="fas fa-coins leaf-icon mr-2"></i>
+          <span class="text-sm" style="color: var(--kusunoki-gray)">経済・就労</span>
+        </div>
+        <h3 class="text-lg font-medium mb-4">現在の経済状況に満足していますか？</h3>
+        <input type="range" min="1" max="5" value="3" class="slider" id="q3-slider" />
+        <div class="slider-labels">
+          <span>不満</span>
+          <span>普通</span>
+          <span>満足</span>
+        </div>
+        <div class="mt-6">
+          <label class="block text-sm mb-2">補足情報（任意）:</label>
+          <textarea
+            id="q3-notes"
+            class="w-full p-2 border rounded"
+            rows="2"
+            placeholder="収入源や経済状況について教えてください"
+          ></textarea>
+        </div>
+        <div class="flex justify-between mt-6">
+          <button class="btn btn-secondary" onclick="prevQuestion(3)">
+            <i class="fas fa-arrow-left mr-2"></i> 戻る
+          </button>
+          <button class="btn btn-primary" onclick="nextQuestion(3)">
+            次へ <i class="fas fa-arrow-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Question 4: 経済・就労（持続可能性評価） -->
+      <div class="card question-card" id="q4">
+        <div class="mb-4">
+          <i class="fas fa-coins leaf-icon mr-2"></i>
+          <span class="text-sm" style="color: var(--kusunoki-gray)">経済・就労</span>
+        </div>
+        <h3 class="text-lg font-medium mb-4">5年後も、安定した収入を得られると思いますか？</h3>
+        <input type="range" min="1" max="5" value="3" class="slider" id="q4-slider" />
+        <div class="slider-labels">
+          <span>とても不安</span>
+          <span>少し不安</span>
+          <span>安心している</span>
+        </div>
+        <div class="mt-6">
+          <label class="block text-sm mb-2">補足情報（任意）:</label>
+          <textarea
+            id="q4-notes"
+            class="w-full p-2 border rounded"
+            rows="2"
+            placeholder="将来の経済面での不安や希望があれば教えてください"
+          ></textarea>
+        </div>
+        <div class="flex justify-between mt-6">
+          <button class="btn btn-secondary" onclick="prevQuestion(4)">
+            <i class="fas fa-arrow-left mr-2"></i> 戻る
+          </button>
+          <button class="btn btn-primary" onclick="nextQuestion(4)">
+            次へ <i class="fas fa-arrow-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Question 5: 住まい・環境（現状評価） -->
+      <div class="card question-card" id="q5">
+        <div class="mb-4">
+          <i class="fas fa-home leaf-icon mr-2"></i>
+          <span class="text-sm" style="color: var(--kusunoki-gray)">住まい・環境</span>
+        </div>
+        <h3 class="text-lg font-medium mb-4">今の住まいは、あなたにとって安心できる場所ですか？</h3>
+        <input type="range" min="1" max="5" value="3" class="slider" id="q5-slider" />
+        <div class="slider-labels">
+          <span>安心できない</span>
+          <span>普通</span>
+          <span>とても安心</span>
+        </div>
+        <div class="mt-6">
+          <label class="block text-sm mb-2">補足情報（任意）:</label>
+          <textarea
+            id="q5-notes"
+            class="w-full p-2 border rounded"
+            rows="2"
+            placeholder="住環境について教えてください"
+          ></textarea>
+        </div>
+        <div class="flex justify-between mt-6">
+          <button class="btn btn-secondary" onclick="prevQuestion(5)">
+            <i class="fas fa-arrow-left mr-2"></i> 戻る
+          </button>
+          <button class="btn btn-primary" onclick="nextQuestion(5)">
+            次へ <i class="fas fa-arrow-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Question 6: 住まい・環境（持続可能性評価） -->
+      <div class="card question-card" id="q6">
+        <div class="mb-4">
+          <i class="fas fa-home leaf-icon mr-2"></i>
+          <span class="text-sm" style="color: var(--kusunoki-gray)">住まい・環境</span>
+        </div>
+        <h3 class="text-lg font-medium mb-4">10年後も、今の住まいで生活できると思いますか？</h3>
+        <input type="range" min="1" max="5" value="3" class="slider" id="q6-slider" />
+        <div class="slider-labels">
+          <span>難しい</span>
+          <span>わからない</span>
+          <span>可能</span>
+        </div>
+        <div class="mt-6">
+          <label class="block text-sm mb-2">補足情報（任意）:</label>
+          <textarea
+            id="q6-notes"
+            class="w-full p-2 border rounded"
+            rows="2"
+            placeholder="将来の住まいについての心配や希望があれば教えてください"
+          ></textarea>
+        </div>
+        <div class="flex justify-between mt-6">
+          <button class="btn btn-secondary" onclick="prevQuestion(6)">
+            <i class="fas fa-arrow-left mr-2"></i> 戻る
+          </button>
+          <button class="btn btn-primary" onclick="nextQuestion(6)">
+            次へ <i class="fas fa-arrow-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Question 7: 健康・医療（現状評価） -->
+      <div class="card question-card" id="q7">
+        <div class="mb-4">
+          <i class="fas fa-heartbeat leaf-icon mr-2"></i>
+          <span class="text-sm" style="color: var(--kusunoki-gray)">健康・医療</span>
+        </div>
+        <h3 class="text-lg font-medium mb-4">現在の健康状態はいかがですか？</h3>
+        <input type="range" min="1" max="5" value="3" class="slider" id="q7-slider" />
+        <div class="slider-labels">
+          <span>悪い</span>
+          <span>普通</span>
+          <span>良好</span>
+        </div>
+        <div class="mt-6">
+          <label class="block text-sm mb-2">補足情報（任意）:</label>
+          <textarea
+            id="q7-notes"
+            class="w-full p-2 border rounded"
+            rows="2"
+            placeholder="健康面で気になることがあれば教えてください"
+          ></textarea>
+        </div>
+        <div class="flex justify-between mt-6">
+          <button class="btn btn-secondary" onclick="prevQuestion(7)">
+            <i class="fas fa-arrow-left mr-2"></i> 戻る
+          </button>
+          <button class="btn btn-primary" onclick="nextQuestion(7)">
+            次へ <i class="fas fa-arrow-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Question 8: 健康・医療（持続可能性評価） -->
+      <div class="card question-card" id="q8">
+        <div class="mb-4">
+          <i class="fas fa-heartbeat leaf-icon mr-2"></i>
+          <span class="text-sm" style="color: var(--kusunoki-gray)">健康・医療</span>
+        </div>
+        <h3 class="text-lg font-medium mb-4">5年後も健康を維持できると思いますか？</h3>
+        <input type="range" min="1" max="5" value="3" class="slider" id="q8-slider" />
+        <div class="slider-labels">
+          <span>不安がある</span>
+          <span>わからない</span>
+          <span>自信がある</span>
+        </div>
+        <div class="mt-6">
+          <label class="block text-sm mb-2">補足情報（任意）:</label>
+          <textarea
+            id="q8-notes"
+            class="w-full p-2 border rounded"
+            rows="2"
+            placeholder="将来の健康面での不安や取り組みがあれば教えてください"
+          ></textarea>
+        </div>
+        <div class="flex justify-between mt-6">
+          <button class="btn btn-secondary" onclick="prevQuestion(8)">
+            <i class="fas fa-arrow-left mr-2"></i> 戻る
+          </button>
+          <button class="btn btn-primary" onclick="nextQuestion(8)">
+            次へ <i class="fas fa-arrow-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Question 9: 人間関係・つながり（現状評価） -->
+      <div class="card question-card" id="q9">
+        <div class="mb-4">
+          <i class="fas fa-users leaf-icon mr-2"></i>
+          <span class="text-sm" style="color: var(--kusunoki-gray)">人間関係・つながり</span>
+        </div>
+        <h3 class="text-lg font-medium mb-4">周りの人との関係は良好ですか？</h3>
+        <input type="range" min="1" max="5" value="3" class="slider" id="q9-slider" />
+        <div class="slider-labels">
+          <span>良好でない</span>
+          <span>普通</span>
+          <span>とても良好</span>
+        </div>
+        <div class="mt-6">
+          <label class="block text-sm mb-2">補足情報（任意）:</label>
+          <textarea
+            id="q9-notes"
+            class="w-full p-2 border rounded"
+            rows="2"
+            placeholder="人間関係について教えてください"
+          ></textarea>
+        </div>
+        <div class="flex justify-between mt-6">
+          <button class="btn btn-secondary" onclick="prevQuestion(9)">
+            <i class="fas fa-arrow-left mr-2"></i> 戻る
+          </button>
+          <button class="btn btn-primary" onclick="nextQuestion(9)">
+            次へ <i class="fas fa-arrow-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Question 10: 人間関係・つながり（持続可能性評価） -->
+      <div class="card question-card" id="q10">
+        <div class="mb-4">
+          <i class="fas fa-users leaf-icon mr-2"></i>
+          <span class="text-sm" style="color: var(--kusunoki-gray)">人間関係・つながり</span>
+        </div>
+        <h3 class="text-lg font-medium mb-4">3年後も、現在の人間関係を維持できると思いますか？</h3>
+        <input type="range" min="1" max="5" value="3" class="slider" id="q10-slider" />
+        <div class="slider-labels">
+          <span>難しい</span>
+          <span>わからない</span>
+          <span>可能</span>
+        </div>
+        <div class="mt-6">
+          <label class="block text-sm mb-2">補足情報（任意）:</label>
+          <textarea
+            id="q10-notes"
+            class="w-full p-2 border rounded"
+            rows="2"
+            placeholder="将来の人間関係についての考えがあれば教えてください"
+          ></textarea>
+        </div>
+        <div class="flex justify-between mt-6">
+          <button class="btn btn-secondary" onclick="prevQuestion(10)">
+            <i class="fas fa-arrow-left mr-2"></i> 戻る
+          </button>
+          <button class="btn btn-primary" onclick="nextQuestion(10)">
+            次へ <i class="fas fa-arrow-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Question 11: 学び・成長（現状評価） -->
+      <div class="card question-card" id="q11">
+        <div class="mb-4">
+          <i class="fas fa-book-open leaf-icon mr-2"></i>
+          <span class="text-sm" style="color: var(--kusunoki-gray)">学び・成長</span>
+        </div>
+        <h3 class="text-lg font-medium mb-4">
+          新しいことを学んだり挑戦したりする機会はありますか？
+        </h3>
+        <input type="range" min="1" max="5" value="3" class="slider" id="q11-slider" />
+        <div class="slider-labels">
+          <span>ほとんどない</span>
+          <span>少しある</span>
+          <span>十分ある</span>
+        </div>
+        <div class="mt-6">
+          <label class="block text-sm mb-2">補足情報（任意）:</label>
+          <textarea
+            id="q11-notes"
+            class="w-full p-2 border rounded"
+            rows="2"
+            placeholder="現在の学びや挑戦について教えてください"
+          ></textarea>
+        </div>
+        <div class="flex justify-between mt-6">
+          <button class="btn btn-secondary" onclick="prevQuestion(11)">
+            <i class="fas fa-arrow-left mr-2"></i> 戻る
+          </button>
+          <button class="btn btn-primary" onclick="nextQuestion(11)">
+            次へ <i class="fas fa-arrow-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Question 12: 学び・成長（持続可能性評価） -->
+      <div class="card question-card" id="q12">
+        <div class="mb-4">
+          <i class="fas fa-book-open leaf-icon mr-2"></i>
+          <span class="text-sm" style="color: var(--kusunoki-gray)">学び・成長</span>
+        </div>
+        <h3 class="text-lg font-medium mb-4">3年後の自分は、今より成長していると思いますか？</h3>
+        <input type="range" min="1" max="5" value="3" class="slider" id="q12-slider" />
+        <div class="slider-labels">
+          <span>あまり思わない</span>
+          <span>わからない</span>
+          <span>とても思う</span>
+        </div>
+        <div class="mt-6">
+          <label class="block text-sm mb-2">補足情報（任意）:</label>
+          <textarea
+            id="q12-notes"
+            class="w-full p-2 border rounded"
+            rows="2"
+            placeholder="将来挑戦したいことがあれば教えてください"
+          ></textarea>
+        </div>
+        <div class="flex justify-between mt-6">
+          <button class="btn btn-secondary" onclick="prevQuestion(12)">
+            <i class="fas fa-arrow-left mr-2"></i> 戻る
+          </button>
+          <button class="btn btn-primary" onclick="nextQuestion(12)">
+            次へ <i class="fas fa-arrow-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Question 13: 総合（現状） -->
+      <div class="card question-card" id="q13">
+        <div class="mb-4">
+          <i class="fas fa-sun leaf-icon mr-2"></i>
+          <span class="text-sm" style="color: var(--kusunoki-gray)">総合評価</span>
+        </div>
+        <h3 class="text-lg font-medium mb-4">現在の生活全般に満足していますか？</h3>
+        <input type="range" min="1" max="5" value="3" class="slider" id="q13-slider" />
+        <div class="slider-labels">
+          <span>不満</span>
+          <span>普通</span>
+          <span>とても満足</span>
+        </div>
+        <div class="mt-6">
+          <label class="block text-sm mb-2">補足情報（任意）:</label>
+          <textarea
+            id="q13-notes"
+            class="w-full p-2 border rounded"
+            rows="2"
+            placeholder="生活全般についての感想があれば教えてください"
+          ></textarea>
+        </div>
+        <div class="flex justify-between mt-6">
+          <button class="btn btn-secondary" onclick="prevQuestion(13)">
+            <i class="fas fa-arrow-left mr-2"></i> 戻る
+          </button>
+          <button class="btn btn-primary" onclick="nextQuestion(13)">
+            次へ <i class="fas fa-arrow-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Question 14: 総合（将来） -->
+      <div class="card question-card" id="q14">
+        <div class="mb-4">
+          <i class="fas fa-sun leaf-icon mr-2"></i>
+          <span class="text-sm" style="color: var(--kusunoki-gray)">総合評価</span>
+        </div>
+        <h3 class="text-lg font-medium mb-4">将来の生活に希望を持てていますか？</h3>
+        <input type="range" min="1" max="5" value="3" class="slider" id="q14-slider" />
+        <div class="slider-labels">
+          <span>あまり持てない</span>
+          <span>わからない</span>
+          <span>とても持てる</span>
+        </div>
+        <div class="mt-6">
+          <label class="block text-sm mb-2">補足情報（任意）:</label>
+          <textarea
+            id="q14-notes"
+            class="w-full p-2 border rounded"
+            rows="2"
+            placeholder="将来の生活についての希望や不安があれば教えてください"
+          ></textarea>
+        </div>
+        <div class="flex justify-between mt-6">
+          <button class="btn btn-secondary" onclick="prevQuestion(14)">
+            <i class="fas fa-arrow-left mr-2"></i> 戻る
+          </button>
+          <button class="btn btn-primary" onclick="nextQuestion(14)">
+            次へ <i class="fas fa-arrow-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Question 15: 希望する支援 -->
+      <div class="card question-card" id="q15">
+        <div class="mb-4">
+          <i class="fas fa-hands-helping leaf-icon mr-2"></i>
+          <span class="text-sm" style="color: var(--kusunoki-gray)">希望する支援</span>
+        </div>
+        <h3 class="text-lg font-medium mb-4">
+          今後、どのような支援があると良いと思いますか？（複数選択可）
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
+          <label class="flex items-center">
+            <input type="checkbox" class="mr-2 h-5 w-5" id="support-1" value="家族支援" />
+            <span>家族・支援者との関係づくり</span>
+          </label>
+          <label class="flex items-center">
+            <input type="checkbox" class="mr-2 h-5 w-5" id="support-2" value="経済支援" />
+            <span>経済面・就労に関する支援</span>
+          </label>
+          <label class="flex items-center">
+            <input type="checkbox" class="mr-2 h-5 w-5" id="support-3" value="住環境支援" />
+            <span>住環境・地域との関係づくり</span>
+          </label>
+          <label class="flex items-center">
+            <input type="checkbox" class="mr-2 h-5 w-5" id="support-4" value="健康支援" />
+            <span>健康管理・医療アクセスの支援</span>
+          </label>
+          <label class="flex items-center">
+            <input type="checkbox" class="mr-2 h-5 w-5" id="support-5" value="関係性支援" />
+            <span>人間関係・コミュニティづくり</span>
+          </label>
+          <label class="flex items-center">
+            <input type="checkbox" class="mr-2 h-5 w-5" id="support-6" value="学習支援" />
+            <span>学び・成長の機会提供</span>
+          </label>
+        </div>
+        <div class="mt-6">
+          <label class="block text-sm mb-2">その他、希望する支援があれば教えてください:</label>
+          <textarea id="q15-notes" class="w-full p-2 border rounded" rows="2"></textarea>
+        </div>
+        <div class="flex justify-between mt-6">
+          <button class="btn btn-secondary" onclick="prevQuestion(15)">
+            <i class="fas fa-arrow-left mr-2"></i> 戻る
+          </button>
+          <button class="btn btn-primary" onclick="calculateResults()">
+            結果を見る <i class="fas fa-chart-pie ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div class="card result-card" id="result-card">
+        <h2 class="text-xl font-bold mb-6 text-center" style="color: var(--kusunoki-dark-green)">
+          アセスメント結果
+        </h2>
+
+        <div class="mb-8">
+          <h3 class="text-lg mb-4">共生活力マップ</h3>
+          <div class="chart-container">
+            <canvas id="resultChart"></canvas>
+          </div>
+          <div class="text-sm text-center mt-2" style="color: var(--kusunoki-gray)">
+            <span class="inline-block mr-4"
+              ><span
+                class="inline-block w-3 h-3"
+                style="background-color: rgba(74, 124, 60, 0.7)"
+              ></span>
+              現在の状況</span
+            >
+            <span class="inline-block"
+              ><span
+                class="inline-block w-3 h-3"
+                style="background-color: rgba(139, 69, 19, 0.7)"
+              ></span>
+              将来の持続可能性</span
+            >
+          </div>
+        </div>
+
+        <div class="result-section">
+          <h3 class="text-lg mb-4">カテゴリ別評価</h3>
+
+          <div class="mb-4">
+            <h4 class="category-title">家族・支援者</h4>
+            <div id="family-result" class="text-sm"></div>
+          </div>
+
+          <div class="mb-4">
+            <h4 class="category-title">経済・就労</h4>
+            <div id="economy-result" class="text-sm"></div>
+          </div>
+
+          <div class="mb-4">
+            <h4 class="category-title">住まい・環境</h4>
+            <div id="housing-result" class="text-sm"></div>
+          </div>
+
+          <div class="mb-4">
+            <h4 class="category-title">健康・医療</h4>
+            <div id="health-result" class="text-sm"></div>
+          </div>
+
+          <div class="mb-4">
+            <h4 class="category-title">人間関係・つながり</h4>
+            <div id="relationship-result" class="text-sm"></div>
+          </div>
+
+          <div class="mb-4">
+            <h4 class="category-title">学び・成長</h4>
+            <div id="growth-result" class="text-sm"></div>
+          </div>
+        </div>
+
+        <div class="result-section">
+          <h3 class="text-lg mb-4">持続可能性リスク評価</h3>
+          <div id="sustainability-risk" class="text-sm"></div>
+        </div>
+
+        <div class="result-section">
+          <h3 class="text-lg mb-4">今後のステップ提案</h3>
+          <div id="next-steps" class="text-sm"></div>
+        </div>
+
+        <div class="mt-8 flex justify-center flex-wrap">
+          <button class="btn btn-primary mx-2 mb-2" onclick="printResults()">
+            <i class="fas fa-print mr-2"></i> 印刷
+          </button>
+          <button class="btn btn-primary mx-2 mb-2" onclick="downloadPDF()">
+            <i class="fas fa-file-pdf mr-2"></i> PDFで保存
+          </button>
+          <button class="btn btn-secondary mx-2 mb-2" onclick="resetAssessment()">
+            <i class="fas fa-redo mr-2"></i> もう一度
+          </button>
+        </div>
+
+        <div class="mt-8 text-center text-sm" style="color: var(--kusunoki-gray)">
+          <p>
+            このアセスメントはクイック版（15問）です。<br />より詳しい評価や専門家のサポートをご希望の方は通常版やハイブリッド版をご利用ください。
+          </p>
+          <p class="mt-2">
+            <a href="#" class="text-green-700 hover:underline">通常版アセスメントを受ける</a> |
+            <a href="#" class="text-green-700 hover:underline">専門家に相談する</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Global variables
+      let currentQuestion = 0;
+      const totalQuestions = 15;
+      let answers = {};
+
+      // Start the assessment
+      function startAssessment() {
+        document.getElementById('intro-card').style.display = 'none';
+        document.querySelector('.progress-container').style.display = 'block';
+        showQuestion(1);
+      }
+
+      // Show a specific question
+      function showQuestion(num) {
+        document.querySelectorAll('.question-card').forEach((card) => {
+          card.classList.remove('active');
+        });
+        document.getElementById('q' + num).classList.add('active');
+        document.getElementById('current-question').textContent = num;
+        updateProgressBar(num);
+        currentQuestion = num;
+      }
+
+      // Next question
+      function nextQuestion(currentNum) {
+        // Save the current answer
+        const slider = document.getElementById('q' + currentNum + '-slider');
+        const notes = document.getElementById('q' + currentNum + '-notes');
+
+        answers['q' + currentNum] = {
+          value: parseInt(slider.value),
+          notes: notes.value,
+        };
+
+        showQuestion(currentNum + 1);
+      }
+
+      // Previous question
+      function prevQuestion(currentNum) {
+        showQuestion(currentNum - 1);
+      }
+
+      // Update progress bar
+      function updateProgressBar(num) {
+        const progressPercentage = (num / totalQuestions) * 100;
+        document.getElementById('progress-bar').style.width = progressPercentage + '%';
+      }
+
+      // Calculate results
+      function calculateResults() {
+        // Save the last question's answer
+        const supportChoices = [];
+        for (let i = 1; i <= 6; i++) {
+          const checkbox = document.getElementById('support-' + i);
+          if (checkbox.checked) {
+            supportChoices.push(checkbox.value);
+          }
+        }
+        const notes = document.getElementById('q15-notes');
+
+        answers['q15'] = {
+          supportChoices: supportChoices,
+          notes: notes.value,
+        };
+
+        // Hide questions and show results
+        document.querySelectorAll('.question-card').forEach((card) => {
+          card.classList.remove('active');
+        });
+        document.querySelector('.progress-container').style.display = 'none';
+        document.getElementById('result-card').style.display = 'block';
+
+        // Calculate category scores
+        const scores = calculateScores();
+
+        // Create chart
+        createResultChart(scores);
+
+        // Generate text results
+        generateTextResults(scores);
+      }
+
+      // Calculate scores for each category
+      function calculateScores() {
+        // Initialize scores object
+        const scores = {
+          family: { current: 0, future: 0 },
+          economy: { current: 0, future: 0 },
+          housing: { current: 0, future: 0 },
+          health: { current: 0, future: 0 },
+          relationship: { current: 0, future: 0 },
+          growth: { current: 0, future: 0 },
+          overall: { current: 0, future: 0 },
+        };
+
+        // Family/support
+        scores.family.current = answers.q1.value;
+        scores.family.future = answers.q2.value;
+
+        // Economy
+        scores.economy.current = answers.q3.value;
+        scores.economy.future = answers.q4.value;
+
+        // Housing
+        scores.housing.current = answers.q5.value;
+        scores.housing.future = answers.q6.value;
+
+        // Health
+        scores.health.current = answers.q7.value;
+        scores.health.future = answers.q8.value;
+
+        // Relationships
+        scores.relationship.current = answers.q9.value;
+        scores.relationship.future = answers.q10.value;
+
+        // Growth
+        scores.growth.current = answers.q11.value;
+        scores.growth.future = answers.q12.value;
+
+        // Overall
+        scores.overall.current = answers.q13.value;
+        scores.overall.future = answers.q14.value;
+
+        return scores;
+      }
+
+      // Create radar chart
+      function createResultChart(scores) {
+        const ctx = document.getElementById('resultChart').getContext('2d');
+
+        const data = {
+          labels: [
+            '家族・支援者',
+            '経済・就労',
+            '住まい・環境',
+            '健康・医療',
+            '人間関係',
+            '学び・成長',
+          ],
+          datasets: [
+            {
+              label: '現在',
+              data: [
+                scores.family.current,
+                scores.economy.current,
+                scores.housing.current,
+                scores.health.current,
+                scores.relationship.current,
+                scores.growth.current,
+              ],
+              backgroundColor: 'rgba(74, 124, 60, 0.2)',
+              borderColor: 'rgba(74, 124, 60, 0.7)',
+              pointBackgroundColor: 'rgba(74, 124, 60, 1)',
+              pointBorderColor: '#fff',
+              pointHoverBackgroundColor: '#fff',
+              pointHoverBorderColor: 'rgba(74, 124, 60, 1)',
+            },
+            {
+              label: '将来（持続可能性）',
+              data: [
+                scores.family.future,
+                scores.economy.future,
+                scores.housing.future,
+                scores.health.future,
+                scores.relationship.future,
+                scores.growth.future,
+              ],
+              backgroundColor: 'rgba(139, 69, 19, 0.2)',
+              borderColor: 'rgba(139, 69, 19, 0.7)',
+              pointBackgroundColor: 'rgba(139, 69, 19, 1)',
+              pointBorderColor: '#fff',
+              pointHoverBackgroundColor: '#fff',
+              pointHoverBorderColor: 'rgba(139, 69, 19, 1)',
+            },
+          ],
+        };
+
+        new Chart(ctx, {
+          type: 'radar',
+          data: data,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            elements: {
+              line: {
+                borderWidth: 2,
+              },
+            },
+            scales: {
+              r: {
+                angleLines: {
+                  display: true,
+                },
+                suggestedMin: 0,
+                suggestedMax: 5,
+                ticks: {
+                  display: false,
+                },
+              },
+            },
+          },
+        });
+      }
+
+      // Generate text results
+      function generateTextResults(scores) {
+        // Family results
+        const familyResult = document.getElementById('family-result');
+        familyResult.innerHTML = generateCategoryResult(
+          '家族・支援者',
+          scores.family,
+          answers.q1.notes,
+          answers.q2.notes
+        );
+
+        // Economy results
+        const economyResult = document.getElementById('economy-result');
+        economyResult.innerHTML = generateCategoryResult(
+          '経済・就労',
+          scores.economy,
+          answers.q3.notes,
+          answers.q4.notes
+        );
+
+        // Housing results
+        const housingResult = document.getElementById('housing-result');
+        housingResult.innerHTML = generateCategoryResult(
+          '住まい・環境',
+          scores.housing,
+          answers.q5.notes,
+          answers.q6.notes
+        );
+
+        // Health results
+        const healthResult = document.getElementById('health-result');
+        healthResult.innerHTML = generateCategoryResult(
+          '健康・医療',
+          scores.health,
+          answers.q7.notes,
+          answers.q8.notes
+        );
+
+        // Relationship results
+        const relationshipResult = document.getElementById('relationship-result');
+        relationshipResult.innerHTML = generateCategoryResult(
+          '人間関係・つながり',
+          scores.relationship,
+          answers.q9.notes,
+          answers.q10.notes
+        );
+
+        // Growth results
+        const growthResult = document.getElementById('growth-result');
+        growthResult.innerHTML = generateCategoryResult(
+          '学び・成長',
+          scores.growth,
+          answers.q11.notes,
+          answers.q12.notes
+        );
+
+        // Sustainability risk assessment
+        const sustainabilityRisk = document.getElementById('sustainability-risk');
+        sustainabilityRisk.innerHTML = generateSustainabilityRisk(scores);
+
+        // Next steps
+        const nextSteps = document.getElementById('next-steps');
+        nextSteps.innerHTML = generateNextSteps(scores, answers.q15.supportChoices);
+      }
+
+      // Generate category result text
+      function generateCategoryResult(categoryName, score, currentNotes, futureNotes) {
+        let html = '';
+
+        const diff = score.future - score.current;
+        let trendText = '';
+
+        if (diff <= -2) {
+          trendText =
+            '<span class="risk-high"><i class="fas fa-arrow-down"></i> 大きく低下する可能性</span>';
+        } else if (diff < 0) {
+          trendText =
+            '<span class="risk-medium"><i class="fas fa-arrow-down"></i> やや低下する可能性</span>';
+        } else if (diff === 0) {
+          trendText = '<span><i class="fas fa-equals"></i> 現状維持</span>';
+        } else if (diff <= 1) {
+          trendText =
+            '<span class="risk-low"><i class="fas fa-arrow-up"></i> やや向上する可能性</span>';
+        } else {
+          trendText =
+            '<span class="risk-low"><i class="fas fa-arrow-up"></i> 大きく向上する可能性</span>';
+        }
+
+        html += `<p class="mb-1">現在の評価: ${score.current}/5点</p>`;
+        html += `<p class="mb-1">将来の見通し: ${score.future}/5点 ${trendText}</p>`;
+
+        if (score.current < 3) {
+          html += `<p class="mt-2 risk-medium">現在の${categoryName}に課題があります。</p>`;
+        }
+
+        if (score.future < 3) {
+          html += `<p class="mt-2 risk-high">将来の${categoryName}について不安があります。</p>`;
+        }
+
+        // Add notes if provided
+        if (currentNotes && currentNotes.trim() !== '') {
+          html += `<p class="mt-2"><span class="font-medium">コメント:</span> ${currentNotes}</p>`;
+        }
+
+        if (futureNotes && futureNotes.trim() !== '') {
+          html += `<p class="mt-2"><span class="font-medium">将来についてのコメント:</span> ${futureNotes}</p>`;
+        }
+
+        return html;
+      }
+
+      // Generate sustainability risk assessment
+      function generateSustainabilityRisk(scores) {
+        const categories = ['family', 'economy', 'housing', 'health', 'relationship', 'growth'];
+        const riskAreas = [];
+        let overallRisk = 0;
+
+        categories.forEach((category) => {
+          const diff = scores[category].future - scores[category].current;
+          if (diff < 0) {
+            overallRisk += Math.abs(diff);
+
+            // Add to risk areas if significant risk
+            if (scores[category].future < 3) {
+              switch (category) {
+                case 'family':
+                  riskAreas.push('家族・支援者');
+                  break;
+                case 'economy':
+                  riskAreas.push('経済・就労');
+                  break;
+                case 'housing':
+                  riskAreas.push('住まい・環境');
+                  break;
+                case 'health':
+                  riskAreas.push('健康・医療');
+                  break;
+                case 'relationship':
+                  riskAreas.push('人間関係・つながり');
+                  break;
+                case 'growth':
+                  riskAreas.push('学び・成長');
+                  break;
+              }
+            }
+          }
+        });
+
+        let html = '';
+
+        if (overallRisk >= 6) {
+          html += `<p class="risk-high mb-3"><i class="fas fa-exclamation-triangle mr-1"></i> 高リスク：将来の持続可能性に複数の課題があります</p>`;
+        } else if (overallRisk >= 3) {
+          html += `<p class="risk-medium mb-3"><i class="fas fa-exclamation-circle mr-1"></i> 中リスク：将来の持続可能性にいくつかの課題があります</p>`;
+        } else if (overallRisk > 0) {
+          html += `<p class="risk-low mb-3"><i class="fas fa-info-circle mr-1"></i> 低リスク：将来の持続可能性に軽度の課題があります</p>`;
+        } else {
+          html += `<p class="risk-low mb-3"><i class="fas fa-check-circle mr-1"></i> リスク低：現在よりも将来の持続可能性が高いか同等です</p>`;
+        }
+
+        if (riskAreas.length > 0) {
+          html += `<p class="mb-2">特に注意が必要な領域：</p>`;
+          html += `<ul class="list-disc pl-5 mb-3">`;
+          riskAreas.forEach((area) => {
+            html += `<li>${area}</li>`;
+          });
+          html += `</ul>`;
+        }
+
+        // Add overall sustainability advice
+        if (overallRisk >= 6) {
+          html += `<p>より詳細なアセスメントと専門的な支援が必要です。支援ネットワークの構築と長期的な計画策定をお勧めします。</p>`;
+        } else if (overallRisk >= 3) {
+          html += `<p>いくつかの領域で将来に備えた準備が必要です。専門家との相談を検討してみてください。</p>`;
+        } else {
+          html += `<p>全体的に良好ですが、持続可能性をさらに高めるために定期的なチェックを続けることをお勧めします。</p>`;
+        }
+
+        return html;
+      }
+
+      // Generate next steps suggestions
+      function generateNextSteps(scores, supportChoices) {
+        let html = '';
+        const categories = ['family', 'economy', 'housing', 'health', 'relationship', 'growth'];
+        const priorityAreas = [];
+
+        // Identify priority areas (low current score or significant drop in future)
+        categories.forEach((category) => {
+          const current = scores[category].current;
+          const future = scores[category].future;
+          const diff = future - current;
+
+          if (current <= 2 || future <= 2 || diff <= -2) {
+            switch (category) {
+              case 'family':
+                priorityAreas.push({
+                  name: '家族・支援者',
+                  suggestions: [
+                    '代替支援者の確保や育成を検討しましょう',
+                    '支援者の負担を軽減する方法を考えましょう',
+                    '家族以外の支援ネットワークを広げましょう',
+                  ],
+                });
+                break;
+              case 'economy':
+                priorityAreas.push({
+                  name: '経済・就労',
+                  suggestions: [
+                    '長期的な経済計画を立ててみましょう',
+                    '利用可能な経済的支援や制度を調べましょう',
+                    'スキルアップや副収入の可能性を探りましょう',
+                  ],
+                });
+                break;
+              case 'housing':
+                priorityAreas.push({
+                  name: '住まい・環境',
+                  suggestions: [
+                    '住環境の将来的な改善計画を考えましょう',
+                    '地域とのつながりを深める活動に参加してみましょう',
+                    '住居の長期的な安定性を確保する方法を検討しましょう',
+                  ],
+                });
+                break;
+              case 'health':
+                priorityAreas.push({
+                  name: '健康・医療',
+                  suggestions: [
+                    '定期的な健康チェックを習慣化しましょう',
+                    '持続可能な健康習慣を取り入れましょう',
+                    '信頼できる医療機関との関係を築きましょう',
+                  ],
+                });
+                break;
+              case 'relationship':
+                priorityAreas.push({
+                  name: '人間関係・つながり',
+                  suggestions: [
+                    '新しいコミュニティや活動に参加してみましょう',
+                    '既存の関係を深める時間を意識的に作りましょう',
+                    '多様な人間関係を構築しましょう',
+                  ],
+                });
+                break;
+              case 'growth':
+                priorityAreas.push({
+                  name: '学び・成長',
+                  suggestions: [
+                    '興味のある分野で学習機会を探してみましょう',
+                    '小さな新しい挑戦を定期的に行いましょう',
+                    '自己成長のための時間を定期的に確保しましょう',
+                  ],
+                });
+                break;
+            }
+          }
+        });
+
+        // Generate HTML for priority areas
+        if (priorityAreas.length > 0) {
+          html += `<p class="mb-3">以下の領域に優先的に取り組むことをお勧めします：</p>`;
+
+          priorityAreas.forEach((area) => {
+            html += `<div class="mb-4">`;
+            html += `<p class="font-medium mb-2">${area.name}</p>`;
+            html += `<ul class="list-disc pl-5">`;
+
+            // Display up to 2 suggestions per area
+            const suggestions = area.suggestions.slice(0, 2);
+            suggestions.forEach((suggestion) => {
+              html += `<li>${suggestion}</li>`;
+            });
+
+            html += `</ul>`;
+            html += `</div>`;
+          });
+        } else {
+          html += `<p class="mb-3">現在の状況は全体的に良好です。以下のような取り組みで、さらに共生活力を高めることができます：</p>`;
+          html += `<ul class="list-disc pl-5 mb-4">`;
+          html += `<li>定期的なセルフチェックを行い、変化に早めに気づく</li>`;
+          html += `<li>将来の変化を想定した準備を少しずつ進める</li>`;
+          html += `<li>現在の良好な状態を維持するための習慣を大切にする</li>`;
+          html += `</ul>`;
+        }
+
+        // Add general advice
+        html += `<p class="mt-4">より詳細な評価や専門家のアドバイスが必要な場合は、通常版アセスメントやハイブリッド版アセスメントをお試しください。</p>`;
+
+        return html;
+      }
+
+      // Print results
+      function printResults() {
+        window.print();
+      }
+
+      // Download as PDF (dummy function - would require server-side processing)
+      function downloadPDF() {
+        alert('PDFダウンロード機能は準備中です。現在は印刷機能をご利用ください。');
+      }
+
+      // Reset assessment
+      function resetAssessment() {
+        answers = {};
+        currentQuestion = 0;
+        document.getElementById('result-card').style.display = 'none';
+        document.getElementById('intro-card').style.display = 'block';
+        document.querySelectorAll('input[type="range"]').forEach((slider) => {
+          slider.value = 3;
+        });
+        document.querySelectorAll('textarea').forEach((textarea) => {
+          textarea.value = '';
+        });
+        document.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
+          checkbox.checked = false;
+        });
+      }
+    </script>
+  </body>
+</html>
+<script id="html_badge_script1">
+  window.__genspark_remove_badge_link =
+    'https://www.genspark.ai/api/html_badge/' +
+    'remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDvskkKDY8eAGXY6UnjVD2SpnSgHx%2Fc%2BtjEIH3d9yDoSoS96e19LbxeNfGCpLXoPIPomsau46yLBEnoM9daX2fHKL0bLyg0FosKvVHBadGCuS0GNliazfJ7YyQdFTFEzLGyrLROTyPuO7B%2B3xQgQ5StP6lHPCSLeg8pKwSIdVxRcgsKDyiwRnoRLNh348B6Cr3fQVvzpSCFoxPKX%2F2j5LwfHrZ5%2BIb356bIYbyQGATfQACEquwLK9lzEkwAhOWZUZhanZLDdrY0kszxpHyrD1FlTsfo3me4PgiVfzIiNADn2Qe4pm8S3tsAgf1cUR8J2J%2BphBBDRDC9eLt5r9rifSVQBsgLBMj9wZNNaDdQ%2BaH1ZIpIl2Svmu4LzenFs5vG7zzRufnmriB1MUlXOizdVejPhSAgERLzNTZkx0ZpBcipe6aMXHznGdd3OsRIrhw3bXhfnN6U0%2B4FhkLWm6kAYNlJ6maIznqYuDzwJv4YONCRGT0rd0Q3mG1k22njaho9f%2FdLIwEaFwxKhLy2y%2FAaX8yIs%3D';
+  window.__genspark_locale = 'ja-JP';
+  window.__genspark_token =
+    'To/BnjzloZ3UfQdcSaYfDvskkKDY8eAGXY6UnjVD2SpnSgHx/c+tjEIH3d9yDoSoS96e19LbxeNfGCpLXoPIPomsau46yLBEnoM9daX2fHKL0bLyg0FosKvVHBadGCuS0GNliazfJ7YyQdFTFEzLGyrLROTyPuO7B+3xQgQ5StP6lHPCSLeg8pKwSIdVxRcgsKDyiwRnoRLNh348B6Cr3fQVvzpSCFoxPKX/2j5LwfHrZ5+Ib356bIYbyQGATfQACEquwLK9lzEkwAhOWZUZhanZLDdrY0kszxpHyrD1FlTsfo3me4PgiVfzIiNADn2Qe4pm8S3tsAgf1cUR8J2J+phBBDRDC9eLt5r9rifSVQBsgLBMj9wZNNaDdQ+aH1ZIpIl2Svmu4LzenFs5vG7zzRufnmriB1MUlXOizdVejPhSAgERLzNTZkx0ZpBcipe6aMXHznGdd3OsRIrhw3bXhfnN6U0+4FhkLWm6kAYNlJ6maIznqYuDzwJv4YONCRGT0rd0Q3mG1k22njaho9f/dLIwEaFwxKhLy2y/AaX8yIs=';
+</script>
+
+<script id="html_notice_dialog_script" src="https://www.genspark.ai/notice_dialog.js"></script>
