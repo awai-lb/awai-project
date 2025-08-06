@@ -2,35 +2,25 @@ name: CI
 
 on:
   push:
-    branches: [ develop, main ]
-  pull_request:
-    branches: [ develop, main ]
+    branches:
+      - develop
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version: '18'
 
       - name: Install dependencies
         run: npm ci
-        working-directory: ./awai-project
 
-      - name: Lint
-        run: npm run lint
-        working-directory: ./awai-project
-
-      - name: Test
+      - name: Run tests
         run: npm test
-        working-directory: ./awai-project
-
-      - name: Build
-        run: npm run build
-        working-directory: ./awai-project
 
