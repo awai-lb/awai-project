@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWAI - ともに在る間（ま）を育む</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --kusu-green: #2D5016;
+            --leaf-green: #4A7C3C;
+            --trunk-brown: #8B4513;
+            --shade-beige: #F5F2E8;
+            --bark-gray: #A0A0A0;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: var(--shade-beige);
+            color: #333;
+        }
+        
+        .serif {
+            font-family: 'Noto Serif JP', serif;
+        }
+        
+        .bg-kusu {
+            background-color: var(--kusu-green);
+        }
+        
+        .bg-leaf {
+            background-color: var(--leaf-green);
+        }
+        
+        .bg-trunk {
+            background-color: var(--trunk-brown);
+        }
+        
+        .text-kusu {
+            color: var(--kusu-green);
+        }
+        
+        .text-leaf {
+            color: var(--leaf-green);
+        }
+        
+        .text-trunk {
+            color: var(--trunk-brown);
+        }
+        
+        .border-kusu {
+            border-color: var(--kusu-green);
+        }
+        
+        .hero-pattern {
+            background-image: 
+                radial-gradient(circle at 30% 20%, rgba(45, 80, 22, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 70% 60%, rgba(74, 124, 60, 0.05) 0%, transparent 30%),
+                radial-gradient(circle at 50% 50%, rgba(139, 69, 19, 0.03) 0%, transparent 60%);
+            background-size: 100% 100%;
+            background-position: center;
+        }
+        
+        .leaf-shape {
+            position: relative;
+        }
+        
+        .leaf-shape::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -15px;
+            width: 30px;
+            height: 30px;
+            background: var(--leaf-green);
+            opacity: 0.1;
+            border-radius: 50% 20% 50% 20%;
+            transform: rotate(45deg);
+            z-index: -1;
+        }
+        
+        .solution-card {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .solution-card::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 80px;
+            height: 80px;
+            background: var(--leaf-green);
+            opacity: 0.05;
+            border-radius: 100% 0 0 0;
+            z-index: 0;
+        }
+        
+        .solution-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(45, 80, 22, 0.1);
+        }
+        
+        .btn-primary {
+            background-color: var(--kusu-green);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--leaf-green);
+            transform: translateY(-2px);
+        }
+        
+        .tree-ring {
+            position: relative;
+        }
+        
+        .tree-ring::before {
+            content: "";
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border: 1px solid var(--trunk-brown);
+            opacity: 0.1;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+        }
+        
+        .tree-ring::after {
+            content: "";
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border: 1px solid var(--trunk-brown);
+            opacity: 0.05;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+        }
+        
+        @media (max-width: 768px) {
+            .tree-ring::before {
+                width: 200px;
+                height: 200px;
+            }
+            .tree-ring::after {
+                width: 300px;
+                height: 300px;
+            }
+        }
+        
+        /* Responsive navigation */
+        .mobile-menu-hidden {
+            display: none;
+        }
+        
+        /* Smooth scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm fixed top-0 w-full z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="#" class="flex items-center">
+                <span class="text-2xl font-bold text-kusu serif">AWAI</span>
+                <span class="ml-2 text-sm text-gray-500">あわい</span>
+            </a>
+            
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="#about" class="text-gray-600 hover:text-kusu transition">あわいについて</a>
+                <a href="#solutions" class="text-gray-600 hover:text-kusu transition">三つの手立て</a>
+                <a href="#vision" class="text-gray-600 hover:text-kusu transition">あわいのこれから</a>
+                <a href="#contact" class="text-gray-600 hover:text-kusu transition">参加する</a>
+                <a href="https://kmwovmuw.gensparkspace.com/" target="_blank" class="px-4 py-2 bg-kusu text-white rounded-md hover:bg-leaf-green transition">アセスメントを試す</a>
+            </div>
+            
+            <!-- Mobile menu button -->
+            <button id="mobile-menu-button" class="md:hidden text-gray-500 focus:outline-none">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="mobile-menu-hidden md:hidden bg-white shadow-sm">
+            <div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
+                <a href="#about" class="text-gray-600 hover:text-kusu transition py-2">あわいについて</a>
+                <a href="#solutions" class="text-gray-600 hover:text-kusu transition py-2">三つの手立て</a>
+                <a href="#vision" class="text-gray-600 hover:text-kusu transition py-2">あわいのこれから</a>
+                <a href="#contact" class="text-gray-600 hover:text-kusu transition py-2">参加する</a>
+                <a href="https://kmwovmuw.gensparkspace.com/" target="_blank" class="px-4 py-2 bg-kusu text-white rounded-md text-center hover:bg-leaf-green transition">アセスメントを試す</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-24 pb-20 md:py-32 hero-pattern tree-ring">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto text-center">
+                <h1 class="text-3xl md:text-5xl font-bold text-kusu mb-6 serif">あわい</h1>
+                <p class="text-xl md:text-2xl font-light text-gray-700 mb-6 serif">ともに在る 間（ま）を育む</p>
+                <p class="text-lg text-gray-600 mb-10 leading-relaxed">
+                    人と人、人と場所、人と時間の「あいだ」を見つめ、結び、育てる──<br>
+                    やさしく、しなやかに、共にある暮らしのかたち。
+                </p>
+                <a href="https://kmwovmuw.gensparkspace.com/" target="_blank" class="inline-block px-6 py-3 bg-kusu text-white rounded-md text-lg hover:bg-leaf-green transition">
+                    共生力を見つける <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-2xl md:text-3xl font-bold text-kusu mb-10 text-center serif">あわいが芽生えた わけ</h2>
+                <div class="text-gray-700 leading-relaxed space-y-6">
+                    <p>
+                        あなたが大切にしたい誰かが、あなたがいなくなったあとも、<br>
+                        安心して、笑って、暮らしていける場所があるとしたら、<br>
+                        そこには、何があってほしいと思いますか？
+                    </p>
+                    <p>
+                        私には、ふたりの息子がいます。<br>
+                        兄はダウン症、弟は自閉症という特性をもっています。<br>
+                        彼らとの日々は、かけがえのない喜びであり、生きていることの実感を、いつも私に与えてくれます。
+                    </p>
+                    <p>
+                        人はなぜ生まれて、そして死んでいくのか。<br>
+                        その「はじまり」と「おわり」のあいだをどう生きるべきか。<br>
+                        彼らがこれから大人になり、私が人生の終わりを迎えたあとも、彼らが自分らしく、誰かとつながりながら、安心して暮らしていけるように。<br>
+                        その"場"、"仕組み"、"文化"を、この人生をかけて、築いていきたいと願っています。
+                    </p>
+                    <p>
+                        「特別な人」と「普通の人」を分けるのではなく、<br>
+                        ともに在り、助け合いながら生きる世界をどうすればつくれるのか。<br>
+                        そして見えてきたのが、<strong class="text-kusu">あわい</strong>という言葉です。
+                    </p>
+                    <p>
+                        人と人、人と場所、人と時間、その「あいだ」にある目には見えぬつながり。<br>
+                        その"間（ま）"を断ち切らず、無理に埋めず、ていねいに育てていく。<br>
+                        その営みの中に、「ともにある暮らし」の可能性があると信じています。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Principles Section -->
+    <section class="py-20 bg-shade-beige" style="background-color: var(--shade-beige);">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-2xl md:text-3xl font-bold text-kusu mb-3 text-center serif">あわいの原則</h2>
+                <p class="text-lg text-gray-600 mb-12 text-center">― 育むためのこころ</p>
+                
+                <p class="text-center mb-10">
+                    あわいとは、つなぐ力・まもる力・そだてる力です。<br>
+                    やさしく強い、人の関係性を育てる土壌のようなもの。
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-sm leaf-shape">
+                        <h3 class="text-xl font-medium text-kusu mb-4 serif">🕊️ あわいの五つの誓い</h3>
+                        <ul class="space-y-4 text-gray-700">
+                            <li class="flex items-start">
+                                <span class="text-leaf-green font-bold mr-2">•</span>
+                                <div>
+                                    <strong>ともに在る</strong> - 立場やちがいを越えて、お互いの存在を認め合い、尊重すること。
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-leaf-green font-bold mr-2">•</span>
+                                <div>
+                                    <strong>寄り添う</strong> - 言葉にならない想いや沈黙にも心を澄ませ、相手の世界に歩み寄ること。
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-leaf-green font-bold mr-2">•</span>
+                                <div>
+                                    <strong>紡ぐ</strong> - 願いや経験を語り合いながら、未来を一緒に思い描き、かたちにすること。
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-leaf-green font-bold mr-2">•</span>
+                                <div>
+                                    <strong>守る</strong> - 安心できる場所と、信頼できる関係性を育み続けること。
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-leaf-green font-bold mr-2">•</span>
+                                <div>
+                                    <strong>育て合う</strong> - 学び合い、気づき合い、支え合う中で、ともに成長していくこと。
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <p class="text-gray-700 leading-relaxed">
+                            これらの原則は、「ともに生きる」という暮らしのかたちを、日々の中で少しずつ育てていくための「こころの土台」です。
+                        </p>
+                        <br>
+                        <p class="text-gray-700 leading-relaxed">
+                            あわいは、理想だけではなく、具体的なしくみとして「三つの手立て」を育てています。それぞれが補い合いながら、共に生きるための土壌を耕していきます。
+                        </p>
+                        <br>
+                        <p class="text-gray-700 leading-relaxed">
+                            あわいは、特別な人のためだけにあるものではありません。<br>
+                            すべての人が「支える人」「支えられる人」になれる――<br>
+                            そうした関係性の中で、ともに暮らし、ともに生きていくこと。<br>
+                            それが「あわい」のめざす社会です。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solutions Section -->
+    <section id="solutions" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl md:text-3xl font-bold text-kusu mb-3 text-center serif">あわいの実践</h2>
+            <p class="text-lg text-gray-600 mb-12 text-center">― 育てるための三つの手立て</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- Living Between (たまゆら) -->
+                <div class="bg-white rounded-lg shadow-sm p-6 solution-card">
+                    <div class="h-16 w-16 bg-kusu bg-opacity-10 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-network-wired text-2xl text-kusu"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-kusu mb-3">Living Between</h3>
+                    <p class="text-gray-600 mb-4 text-sm italic">つながりを紡ぎ、支え合いをめぐらせる、しなやかな支援のしくみ</p>
+                    <p class="text-gray-700 mb-6">
+                        人と人、人と地域のあいだにある<strong>見えにくく儚い"つながり"</strong>を紡ぎ直す、循環型の支援ネットワークです。Shared Lives Strengthsで明らかになった共生活力源をもとに、どのような支援が必要か、どのような関係が必要かを見つけ出し、しなやかに調整・連携します。
+                    </p>
+                    <div class="mt-auto">
+                        <a href="#" class="text-kusu hover:text-leaf-green transition flex items-center">
+                            詳しく見る <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Shared Lives Strengths (はぐくみ) -->
+                <div class="bg-white rounded-lg shadow-sm p-6 solution-card">
+                    <div class="h-16 w-16 bg-kusu bg-opacity-10 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-seedling text-2xl text-kusu"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-kusu mb-3">Shared Lives Strengths</h3>
+                    <p class="text-gray-600 mb-4 text-sm italic">ひとりひとりの「いま」を見つめ、支え合う力を育む</p>
+                    <p class="text-gray-700 mb-6">
+                        一人ひとりの暮らしに根ざした支えの源（みなもと）＝共生活力源を、丁寧に見つめ直すアセスメントツールです。家族や友人とのつながり、日々の習慣、心の拠り所など、目に見えにくい"支え"を言葉にし、本人と支援者が対話を重ねながら、今の生活を支えるバランスや足りない部分をともに確認します。
+                    </p>
+                    <div class="mt-auto">
+                        <a href="https://kmwovmuw.gensparkspace.com/" target="_blank" class="text-kusu hover:text-leaf-green transition flex items-center">
+                            アセスメントを試す <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Shared Grove (ひこばえ) -->
+                <div class="bg-white rounded-lg shadow-sm p-6 solution-card">
+                    <div class="h-16 w-16 bg-kusu bg-opacity-10 rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-home text-2xl text-kusu"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-kusu mb-3">Shared Grove</h3>
+                    <p class="text-gray-600 mb-4 text-sm italic">ともに在ることを体感する、ひらかれた共生の場</p>
+                    <p class="text-gray-700 mb-6">
+                        障がいの有無や立場の違いを越えて、人と人が自然に集い、暮らし、働くことができる共生の"森"のような空間です。カフェ、ケータリング、ランドリー、バスハウス、ワークショップスペースなど、多様な営みが交差し、地域の人々が気軽に立ち寄り、つながることができます。
+                    </p>
+                    <div class="mt-auto">
+                        <a href="#" class="text-kusu hover:text-leaf-green transition flex items-center">
+                            詳しく見る <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tools Map -->
+            <div class="max-w-4xl mx-auto mt-16 p-6 bg-white rounded-lg shadow-sm">
+                <h3 class="text-xl font-bold text-kusu mb-6 text-center serif">三つの道具が描く"あわい"の地図</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr>
+                                <th class="py-3 px-4 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">手立て</th>
+                                <th class="py-3 px-4 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">英語名</th>
+                                <th class="py-3 px-4 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">主な役割</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr>
+                                <td class="py-4 px-4 text-sm font-medium text-gray-700">Living Between</td>
+                                <td class="py-4 px-4 text-sm text-gray-500">Living Between</td>
+                                <td class="py-4 px-4 text-sm text-gray-500">つながりを編み、支援を巡らせる、やわらかで持続的な支援ネットワーク</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-4 text-sm font-medium text-gray-700">Shared Lives Strengths</td>
+                                <td class="py-4 px-4 text-sm text-gray-500">Shared Lives Strengths</td>
+                                <td class="py-4 px-4 text-sm text-gray-500">生きる力と支援の源を言葉にし、支援のかたちを共につくるアセスメント</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-4 text-sm font-medium text-gray-700">Shared Grove</td>
+                                <td class="py-4 px-4 text-sm text-gray-500">Shared Grove</td>
+                                <td class="py-4 px-4 text-sm text-gray-500">ひと・暮らし・営みが自然にまじわる、地域に根ざした共生の場</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Vision Section -->
+    <section id="vision" class="py-20 bg-shade-beige" style="background-color: var(--shade-beige);">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-2xl md:text-3xl font-bold text-kusu mb-10 text-center serif">あわいの これからへ</h2>
+                <div class="bg-white p-8 rounded-lg shadow-sm">
+                    <p class="text-gray-700 leading-relaxed mb-6">
+                        あわいは、特別な人のためだけにあるものではありません。<br>
+                        すべての人が「支える人」「支えられる人」になれる――<br>
+                        そうした関係性の中で、ともに暮らし、ともに生きていくこと。<br>
+                        それが「あわい」のめざす社会です。
+                    </p>
+                    <p class="text-gray-700 leading-relaxed mb-6">
+                        あなたの声が、あわいを育てます。<br>
+                        一緒に歩みはじめてみませんか？
+                    </p>
+                    
+                    <div class="mt-8 flex flex-col md:flex-row md:justify-center space-y-4 md:space-y-0 md:space-x-4">
+                        <a href="https://kmwovmuw.gensparkspace.com/" target="_blank" class="px-6 py-3 bg-kusu text-white rounded-md text-center hover:bg-leaf-green transition">
+                            アセスメントを試す
+                        </a>
+                        <a href="#contact" class="px-6 py-3 border border-kusu text-kusu rounded-md text-center hover:bg-kusu hover:text-white transition">
+                            プロジェクトに参加する
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl md:text-3xl font-bold text-kusu mb-3 text-center serif">ご参加をお考えの方へ</h2>
+            <p class="text-lg text-gray-600 mb-12 text-center">あなたとともに、あわいを育てていきたいと思います</p>
+            
+            <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="text-xl font-medium text-kusu mb-4 serif">こんな方とともに育てたい</h3>
+                    <ul class="space-y-3 text-gray-700">
+                        <li class="flex items-start">
+                            <span class="text-leaf-green mr-2">•</span>
+                            <div>家族や支援について考えたいと思っている方</div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-leaf-green mr-2">•</span>
+                            <div>地域の中で、ひとと人との関係を築きたい方</div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-leaf-green mr-2">•</span>
+                            <div>福祉・医療・教育・建築などの仕事をしている方</div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-leaf-green mr-2">•</span>
+                            <div>「あわい」という言葉に心が動いた方</div>
+                        </li>
+                    </ul>
+                    
+                    <h3 class="text-xl font-medium text-kusu mt-8 mb-4 serif">これからの流れ</h3>
+                    <ul class="space-y-3 text-gray-700">
+                        <li class="flex items-start">
+                            <span class="text-leaf-green mr-2">1.</span>
+                            <div><strong>ご関心の連絡</strong> - メール・フォーム等でお気軽にお声がけください。</div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-leaf-green mr-2">2.</span>
+                            <div><strong>対話の場への参加</strong> - 語り合いながら、構想を一緒に育てていきます。</div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-leaf-green mr-2">3.</span>
+                            <div><strong>場やしくみづくりへの参画</strong> - 分野を越えて、地域の中で実践をともに創りましょう。</div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="text-xl font-medium text-kusu mb-6 serif">お問い合わせ</h3>
+                    
+                    <form class="space-y-4">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">お名前</label>
+                            <input type="text" id="name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-kusu focus:border-kusu">
+                        </div>
+                        
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">メールアドレス</label>
+                            <input type="email" id="email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-kusu focus:border-kusu">
+                        </div>
+                        
+                        <div>
+                            <label for="interest" class="block text-sm font-medium text-gray-700 mb-1">ご興味のある分野</label>
+                            <select id="interest" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-kusu focus:border-kusu">
+                                <option value="">お選びください</option>
+                                <option value="assessment">Shared Lives Strengthsアセスメント</option>
+                                <option value="network">Living Between支援ネットワーク</option>
+                                <option value="community">Shared Grove共生の場</option>
+                                <option value="all">すべて</option>
+                                <option value="other">その他</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-gray-700 mb-1">メッセージ</label>
+                            <textarea id="message" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-kusu focus:border-kusu"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="w-full px-6 py-3 bg-kusu text-white rounded-md hover:bg-leaf-green transition">送信する</button>
+                    </form>
+                    
+                    <div class="mt-8 text-center text-sm text-gray-600">
+                        <p>または<a href="https://github.com/awai-project" target="_blank" class="text-kusu hover:underline">GitHub</a>でプロジェクトに参加</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="max-w-4xl mx-auto mt-16 text-center">
+                <p class="text-gray-600 italic">
+                    あわい―― それは、やさしい循環を生む "間" の物語です。<br>
+                    風のように、手をつなぐように。ともに、生きていく場を育てましょう。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 bg-kusu text-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-6xl mx-auto">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="mb-6 md:mb-0">
+                        <div class="flex items-center">
+                            <span class="text-2xl font-bold serif">AWAI</span>
+                            <span class="ml-2 text-sm opacity-75">あわい</span>
+                        </div>
+                        <p class="text-sm opacity-75 mt-2">ともに在る間（ま）を育む</p>
+                    </div>
+                    
+                    <div class="flex flex-col md:flex-row md:space-x-12 space-y-6 md:space-y-0">
+                        <div>
+                            <h4 class="font-medium mb-3">Three Solutions</h4>
+                            <ul class="space-y-2 text-sm opacity-75">
+                                <li><a href="#" class="hover:text-white hover:underline">Living Between</a></li>
+                                <li><a href="#" class="hover:text-white hover:underline">Shared Lives Strengths</a></li>
+                                <li><a href="#" class="hover:text-white hover:underline">Shared Grove</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-medium mb-3">Connect</h4>
+                            <ul class="space-y-2 text-sm opacity-75">
+                                <li><a href="https://github.com/awai-project" target="_blank" class="hover:text-white hover:underline">GitHub</a></li>
+                                <li><a href="#contact" class="hover:text-white hover:underline">お問い合わせ</a></li>
+                                <li><a href="#" class="hover:text-white hover:underline">プロジェクト参加</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 pt-6 border-t border-white border-opacity-20 flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-sm opacity-75">&copy; 2023 AWAI Project. All rights reserved.</p>
+                    <div class="mt-4 md:mt-0 flex space-x-4">
+                        <a href="#" class="text-white opacity-75 hover:opacity-100">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="#" class="text-white opacity-75 hover:opacity-100">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('mobile-menu-hidden');
+        });
+        
+        // Close mobile menu when clicking on links
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.getElementById('mobile-menu').classList.add('mobile-menu-hidden');
+            });
+        });
+    </script>
+</body>
+</html>
+    <script id="html_badge_script1">
+        window.__genspark_remove_badge_link = "https://www.genspark.ai/api/html_badge/" +
+            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDkOfzogSo6jl%2BsolWg2qMsiXcFegpI41WU7%2F1%2FHB3b5YfmwQYn9VMA93zLOqGC6HrNt4dv6vYVgJ%2BDfedftquySSMEPUuWQeFnILJ4qy0jVZ5HRMRYOy4gcv8%2Fx6uM9hf%2F3btJOfNcm7sKHrAEDFmtdj0pWRj3XVlU0hdhTK0STi0m8RreGjJo641KQ0%2Fktqr2%2FjiGJDtn1S7WWrS6GqGasuny8TytjNRWs5VGhHh7ktxtDNm0AOxArScbYxG3%2BYRfdjRReeco%2Bzd6zD6HXNzDUwLTfnF02q3O2%2Fy11SWfg0GUIFNs7cfRMtzJ4ozVM4rngiytGq191dupqP3pi4dFfs3%2BVyFxex0WgtiBapaxh3CPd%2FuVGck5GSFCLLpejD78EEAM2SowoZBzb%2FilIrOHo48M2O3SDOEpYLrFGuIeDTnEmDs%2Fdxim31jHM1LSAN5qvkFlmdNSA6tVqlFsUcmoRzEecp6urquQXS5RtFSsPzYQE1NUX3p1%2B5ccThjIWYfg%3D%3D";
+        window.__genspark_locale = "ja-JP";
+        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDkOfzogSo6jl+solWg2qMsiXcFegpI41WU7/1/HB3b5YfmwQYn9VMA93zLOqGC6HrNt4dv6vYVgJ+DfedftquySSMEPUuWQeFnILJ4qy0jVZ5HRMRYOy4gcv8/x6uM9hf/3btJOfNcm7sKHrAEDFmtdj0pWRj3XVlU0hdhTK0STi0m8RreGjJo641KQ0/ktqr2/jiGJDtn1S7WWrS6GqGasuny8TytjNRWs5VGhHh7ktxtDNm0AOxArScbYxG3+YRfdjRReeco+zd6zD6HXNzDUwLTfnF02q3O2/y11SWfg0GUIFNs7cfRMtzJ4ozVM4rngiytGq191dupqP3pi4dFfs3+VyFxex0WgtiBapaxh3CPd/uVGck5GSFCLLpejD78EEAM2SowoZBzb/ilIrOHo48M2O3SDOEpYLrFGuIeDTnEmDs/dxim31jHM1LSAN5qvkFlmdNSA6tVqlFsUcmoRzEecp6urquQXS5RtFSsPzYQE1NUX3p1+5ccThjIWYfg==";
+    </script>
+    
+    <script id="html_notice_dialog_script" src="https://www.genspark.ai/notice_dialog.js"></script>
+    
